@@ -1,38 +1,78 @@
 #include <iostream>
 #include "tridiagonals_solver.h"
 #include <cmath>
+#include <numbers>
+
+double p2(double x);
+double p1(double x);
+double p0(double x);
+double B(double x);
 
 int main() 
 {
     // Пример
-	int n = 3;
-	double *b = new double[n];
-	double *c = new double[n];
-	double *a = new double[n];
-	double *x = new double[n];
-	double *f = new double[n];
+	int N = 1000;
+    
+	double *b = new double[N];
+	double *c = new double[N];
+	double *a = new double[N];
+	double *x = new double[N];
+	double *f = new double[N];
 
-	for (int i = 0; i < n; i++) {
-		c[i] = -2;
+    double x0=0;
+    double xN=std::numbers::pi;
+    double K0=1;
+    double KN=-1;
+    double h=(xN-x0)/N;
+
+    f[0]=K0;
+    f[N]=KN;
+
+	for (int i = 0; i < N+1; i++) 
+    {
+		double xi=x0+i*h;
+
+        c[i] = (i == 0) ? 0 : p1(xi)/h + p2(xi)/(h*h);
+        a[i] = (i==N) ? 0 : p2(xi)/(h*h);
+        b[i] = (i==0 || i==N) ?  1 : -(p1(xi)/h + 2*p2(xi)/(h*h)) + p0(xi);
+
+        if (0<i && i < N)
+        {
+            f[i]=B(xi);
+        }
 	}
 
-	for (int i = 0; i < n; i++) {
-		a[i] = -2;
-	}
+    // for (int i = 0; i < N+1; i++)
+    // {
+    //     std::cout << "i:" << i << "F:" << f[i] << "c:" << c[i] << "B:" << b[i] << std::endl;
+    // }
 
-	f[0] = -2;
-	f[1] = -6;
-	f[2] = -2;
+	solve(N+1, a, b, c, f, x);
 
-	for (int i = 0; i < n; i++) {
-		b[i] = 1;
-	}
-
-	solve(n, a, b, c, f, x);
-
-	for (int i = 0; i < n; i++) {
-		std::cout << x[i] << std::endl;
+	for (int i = 0; i < N+1; i++) 
+    {
+		std::cout << x[i]-cos(x0+i*h) << std::endl;
 	}
 
 	return 0;
+}
+
+double p2(double x)
+{
+    return 1;
+}
+
+double p1(double x)
+{
+    return 1;
+}
+
+double p0(double x)
+{
+    return 1;
+}
+
+double B(double x)
+{
+    return -sin(x);
 }

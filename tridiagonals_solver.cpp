@@ -27,6 +27,4 @@ void solve(int n, double * A, double * B, double * C, double * F, double *res)
 	{
 		res[i] = (F[i] - C[i] * res[i + 1]) / B[i];
 	}
-
-    *res;
 }
