@@ -2,6 +2,7 @@
 #include "tridiagonals_solver.h"
 #include <cmath>
 #include <numbers>
+#include <chrono>
 
 double p2(double x);
 double p1(double x);
@@ -10,8 +11,10 @@ double B(double x);
 
 int main() 
 {
+    auto start = std::chrono::steady_clock::now();
+
     // Пример
-	int N = 1000;
+	int N = 100000;
     
 	double *b = new double[N];
 	double *c = new double[N];
@@ -49,10 +52,15 @@ int main()
 
 	solve(N+1, a, b, c, f, x);
 
-	for (int i = 0; i < N+1; i++) 
-    {
-		std::cout << x[i]-cos(x0+i*h) << std::endl;
-	}
+    auto end = std::chrono::steady_clock::now();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    std::cout <<  ms.count() << "FF";
+
+	// for (int i = 0; i < N+1; i++) 
+    // {
+	// 	std::cout << x[i]-cos(x0+i*h) << std::endl;
+	// }
 
 	return 0;
 }
