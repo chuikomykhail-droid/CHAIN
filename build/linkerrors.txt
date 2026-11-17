@@ -1,0 +1,11 @@
+================================================================================
+Linker Errors
+Generated: 2026-11-17T21:12:49.915Z
+Total Errors: 2
+================================================================================
+
+[LNK2019] (MSVC)
+unresolved external symbol "double __cdecl solve(int,double *,double *,double *,double *)" (?solve@@YANHPEAN000@Z) referenced in function main [D:\Flash\golova\cpp\chain\CHAIN\build\chain.vcxproj]
+
+[LNK1120] (MSVC)
+1 unresolved externals [D:\Flash\golova\cpp\chain\CHAIN\build\chain.vcxproj]
