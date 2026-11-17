@@ -28,7 +28,7 @@ int main()
 		b[i] = 1;
 	}
 
-	solve(n, a, b, c, f);
+	solve(n, a, b, c, f, x);
 
 	for (int i = 0; i < n; i++) {
 		std::cout << x[i] << std::endl;

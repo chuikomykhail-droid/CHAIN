@@ -10,10 +10,9 @@
  * F - правая часть (столбец)
  * res - решение, массив x будет содержать ответ
  */
-double solve(int n, double * A, double * B, double * C, double * F)
+void solve(int n, double * A, double * B, double * C, double * F, double *res)
 {
 	double temp;
-    double *res = new double[n];
 
 	for (int i = 1; i < n; i++)
 	{
@@ -29,5 +28,5 @@ double solve(int n, double * A, double * B, double * C, double * F)
 		res[i] = (F[i] - C[i] * res[i + 1]) / B[i];
 	}
 
-    return *res;
+    *res;
 }
