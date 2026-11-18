@@ -30,7 +30,7 @@ void GridFunction::CalculateDerivatives()
 
     D1.resize(N+1);
     D1[0]=(-3*F[0]+4*F[1]-F[2])/(2*h);
-    for (int i=0; i<N; i++)
+    for (int i=1; i<N; i++)
     {
         D1[i]=(F[i+1]-F[i-1])/(2*h);
     }
