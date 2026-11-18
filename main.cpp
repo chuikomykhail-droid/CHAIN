@@ -1,8 +1,8 @@
 #include <iostream>
-#include "tridiagonals_solver.h"
+#include "DE2solver.h"
 #include <cmath>
 #include <numbers>
-#include <chrono>
+#include <vector>
 
 double p2(double x);
 double p1(double x);
@@ -11,56 +11,43 @@ double B(double x);
 
 int main() 
 {
-    auto start = std::chrono::steady_clock::now();
-
     // Пример
-	int N = 100000;
+	constexpr int N = 9999;
     
-	double *b = new double[N];
-	double *c = new double[N];
-	double *a = new double[N];
-	double *x = new double[N];
-	double *f = new double[N];
+	double *y = new double[N+1];
 
     double x0=0;
     double xN=std::numbers::pi;
-    double K0=1;
-    double KN=-1;
-    double h=(xN-x0)/N;
 
-    f[0]=K0;
-    f[N]=KN;
+    double h = (xN-x0)/N;
+
+    double *BC0 = new double[]{1, -1, 1};
+    double *BCN = new double[]{1, -1, -1};
+
+    double Cfs[4][10000]{};
+
+    std:: cout << "ALLO";
+
+    for (int i=0; i<N+1; i++)
+    {
+        //std:: cout << "ALLO" << i;
+        double xi=x0+i*h;
+        Cfs[2][i]=p2(xi);
+        Cfs[1][i]=p1(xi);
+        Cfs[0][i]=p0(xi);
+        Cfs[3][i]=B(xi);
+    }
+
+    solveDE2(N, h,BC0, BCN, Cfs, y);
+    
+    
 
 	for (int i = 0; i < N+1; i++) 
     {
-		double xi=x0+i*h;
-
-        c[i] = (i == 0) ? 0 : p1(xi)/h + p2(xi)/(h*h);
-        a[i] = (i==N) ? 0 : p2(xi)/(h*h);
-        b[i] = (i==0 || i==N) ?  1 : -(p1(xi)/h + 2*p2(xi)/(h*h)) + p0(xi);
-
-        if (0<i && i < N)
-        {
-            f[i]=B(xi);
-        }
+		std::cout << y[i]-cos(x0+i*h) << std::endl;
 	}
 
-    // for (int i = 0; i < N+1; i++)
-    // {
-    //     std::cout << "i:" << i << "F:" << f[i] << "c:" << c[i] << "B:" << b[i] << std::endl;
-    // }
-
-	solve(N+1, a, b, c, f, x);
-
-    auto end = std::chrono::steady_clock::now();
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-    std::cout <<  ms.count() << "FF";
-
-	// for (int i = 0; i < N+1; i++) 
-    // {
-	// 	std::cout << x[i]-cos(x0+i*h) << std::endl;
-	// }
+    //std::cout << y[0];
 
 	return 0;
 }
@@ -82,5 +69,5 @@ double p0(double x)
 
 double B(double x)
 {
-    return -sin(x);
+    return sin(x);
 }

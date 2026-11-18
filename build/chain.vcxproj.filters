@@ -4,7 +4,7 @@
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\tridiagonals_solver.cpp">
+    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\DE2solver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

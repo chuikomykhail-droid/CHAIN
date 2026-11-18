@@ -357,7 +357,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\main.cpp" />
-    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\tridiagonals_solver.cpp" />
+    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\DE2solver.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
