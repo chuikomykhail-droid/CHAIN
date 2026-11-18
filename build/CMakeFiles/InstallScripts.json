@@ -1,7 +1,8 @@
 {
 	"InstallScripts" : 
 	[
-		"D:/Flash/golova/cpp/chain/CHAIN/build/cmake_install.cmake"
+		"D:/Flash/golova/cpp/chain/CHAIN/build/cmake_install.cmake",
+		"D:/Flash/golova/cpp/chain/CHAIN/build/_deps/sdl3-build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

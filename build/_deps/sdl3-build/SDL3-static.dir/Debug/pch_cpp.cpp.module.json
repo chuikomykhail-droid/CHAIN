@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "SDL3-static.dir\\Debug\\pch_cpp.obj",
+            "outputs": [
+                "D:\\Flash\\golova\\cpp\\chain\\CHAIN\\build\\_deps\\sdl3-build\\Debug\\SDL3-static.pdb",
+                "SDL3-static.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

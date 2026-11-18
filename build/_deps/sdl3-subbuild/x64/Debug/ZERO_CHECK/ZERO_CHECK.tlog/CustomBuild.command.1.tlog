@@ -1,0 +1,10 @@
+^D:\FLASH\GOLOVA\CPP\CHAIN\CHAIN\BUILD\_DEPS\SDL3-SUBBUILD\CMAKEFILES\504660C69206A2569A96D32915217590\GENERATE.STAMP.RULE
+setlocal
+"D:\Soft\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Flash/golova/cpp/chain/CHAIN/build/_deps/sdl3-subbuild -BD:/Flash/golova/cpp/chain/CHAIN/build/_deps/sdl3-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Flash/golova/cpp/chain/CHAIN/build/_deps/sdl3-subbuild/sdl3-populate.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "DE2solver.h"
+#include "plot.h"
 #include <cmath>
 #include <numbers>
 #include <vector>
@@ -17,12 +18,12 @@ int main()
 	double *y = new double[N+1];
 
     double x0=0;
-    double xN=std::numbers::pi;
+    double xN=2;
 
     double h = (xN-x0)/N;
 
-    double *BC0 = new double[]{1, -1, 1};
-    double *BCN = new double[]{1, -1, -1};
+    double *BC0 = new double[]{1, 0, 0};
+    double *BCN = new double[]{1, 0, 4};
 
     std::array<std::vector<double>, 4> Cfs;
     for (int i = 0; i<4; i++){
@@ -51,6 +52,14 @@ int main()
 
     std::cout << std::endl << av;
 
+    // График: численное решение и точное cos(x)
+    std::vector<double> X(N+1), Y(y, y+N+1), Yexact(N+1);
+    for (int i = 0; i < N+1; i++) {
+        X[i] = x0 + i*h;
+        Yexact[i] = (x0+i*h)*(x0+i*h);
+    }
+    plotFunctions(X, {Y, Yexact}, "y(x): numeric (blue) vs x^2 (red)");
+
     //std::cout << y[0];
 
 	return 0;
@@ -58,7 +67,7 @@ int main()
 
 double p2(double x)
 {
-    return 1;
+    return x*x;
 }
 
 double p1(double x)
@@ -68,10 +77,10 @@ double p1(double x)
 
 double p0(double x)
 {
-    return 1;
+    return -2;
 }
 
 double B(double x)
 {
-    return sin(x);
+    return -2*x;
 }
