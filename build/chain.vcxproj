@@ -373,6 +373,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\plot.cpp" />
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\plotwindow.cpp" />
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\gridFunction.cpp" />
+    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\chain.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -3,15 +3,18 @@
 
 /**
  * Метод прогонки
- * n - число уравнений (строк матрицы)
+ * n - число уравнений (строк матрицы) = B.size()
  * C - диагональ, лежащая над главной (нумеруется: [0;n-2])
  * B - главная диагональ матрицы A (нумеруется: [0;n-1])
  * A - диагональ, лежащая под главной (нумеруется: [1;n-1])
  * F - правая часть (столбец)
- * res - решение, массив x будет содержать ответ
+ * Возвращает решение. B и F принимаются по значению: алгоритм их портит.
  */
-void solve_tridiagonals(int n, double * A, double * B, double * C, double * F, double *res)
+std::vector<double> solve_tridiagonals(const std::vector<double>& A, std::vector<double> B,
+                                       const std::vector<double>& C, std::vector<double> F)
 {
+	int n = (int)B.size();
+	std::vector<double> res(n);
 	double temp;
 
 	for (int i = 1; i < n; i++)
@@ -27,6 +30,8 @@ void solve_tridiagonals(int n, double * A, double * B, double * C, double * F, d
 	{
 		res[i] = (F[i] - C[i] * res[i + 1]) / B[i];
 	}
+
+	return res;
 }
 
 /**
@@ -36,13 +41,11 @@ void solve_tridiagonals(int n, double * A, double * B, double * C, double * F, d
 * BC0 - Boundary condition in x0: BC[0]f + BC[1]f' = BC[2]
 * BCN - Boundary condition in xN: BC[0]f + BC[1]f' = BC[2]
 * Coofs -- cooficients of DE : Cfs[2]f'' + Cfs[1]f' + Cfs[0]f + Cfs[3] = 0
+* returns f on the grid, N+1 values
 */
-void solveDE2(int N, double h, double BC0[3], double BCN[3], std::array<std::vector<double>, 4>& Cfs, double *res)
+std::vector<double> solveDE2(int N, double h, double BC0[3], double BCN[3], const std::array<std::vector<double>, 4>& Cfs)
 {
-	double *a = new double[N+1];
-	double *b = new double[N+1];
-	double *c = new double[N+1];
-	double *f = new double [N+1];
+	std::vector<double> a(N+1), b(N+1), c(N+1), f(N+1);
 
 	b[0]=BC0[0]-BC0[1]/h;
 	c[0]=BC0[1]/h;
@@ -61,5 +64,5 @@ void solveDE2(int N, double h, double BC0[3], double BCN[3], std::array<std::vec
         f[i]=-Cfs[3][i];
 	}
 
-	solve_tridiagonals(N+1,a,b,c,f,res);
+	return solve_tridiagonals(a, std::move(b), c, std::move(f));
 }

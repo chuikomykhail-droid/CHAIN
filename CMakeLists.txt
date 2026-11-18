@@ -21,6 +21,7 @@ add_executable(chain
     plot.cpp
     plotwindow.cpp
     gridFunction.cpp
+    chain.cpp
 )
 target_link_libraries(chain PRIVATE SDL3::SDL3-static)
 

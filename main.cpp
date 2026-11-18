@@ -68,8 +68,6 @@ void interactiveDemo(int N)
 
 void DrawWithGivenBC(int N, double A[2], double B[2], std::vector<double>& X, std::vector<double>& Y)
 {
-    double *y = new double[N+1];
-
     double x0=A[0];
     double xN=B[0];
 
@@ -93,7 +91,7 @@ void DrawWithGivenBC(int N, double A[2], double B[2], std::vector<double>& X, st
         Cfs[3].push_back(B0(xi) );
     }
 
-    solveDE2(N, h,BC0, BCN, Cfs, y);
+    std::vector<double> y = solveDE2(N, h,BC0, BCN, Cfs);
 
     for (int i = 0; i < N+1; i++) {
         X[i] = x0 + i*h;
