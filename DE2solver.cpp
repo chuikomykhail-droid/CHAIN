@@ -37,7 +37,7 @@ void solve_tridiagonals(int n, double * A, double * B, double * C, double * F, d
 * BCN - Boundary condition in xN: BC[0]f + BC[1]f' = BC[2]
 * Coofs -- cooficients of DE : Cfs[2]f'' + Cfs[1]f' + Cfs[0]f + Cfs[3] = 0
 */
-void solveDE2(int N, double h, double *BC0, double *BCN, double  Cfs[4][10000], double *res)
+void solveDE2(int N, double h, double BC0[3], double BCN[3], std::array<std::vector<double>, 4>& Cfs, double *res)
 {
 	double *a = new double[N+1];
 	double *b = new double[N+1];

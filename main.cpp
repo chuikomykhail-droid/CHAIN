@@ -24,28 +24,32 @@ int main()
     double *BC0 = new double[]{1, -1, 1};
     double *BCN = new double[]{1, -1, -1};
 
-    double Cfs[4][10000]{};
-
-    std:: cout << "ALLO";
+    std::array<std::vector<double>, 4> Cfs;
+    for (int i = 0; i<4; i++){
+        Cfs[i].reserve(N+1);
+    }
 
     for (int i=0; i<N+1; i++)
     {
-        //std:: cout << "ALLO" << i;
         double xi=x0+i*h;
-        Cfs[2][i]=p2(xi);
-        Cfs[1][i]=p1(xi);
-        Cfs[0][i]=p0(xi);
-        Cfs[3][i]=B(xi);
+
+        Cfs[2].push_back(p2(xi));
+        Cfs[1].push_back(p1(xi));
+        Cfs[0].push_back(p0(xi));
+        Cfs[3].push_back(B(xi) );
     }
 
     solveDE2(N, h,BC0, BCN, Cfs, y);
     
     
 
-	for (int i = 0; i < N+1; i++) 
+	double av = 0;
+    for (int i = 0; i < N+1; i++) 
     {
-		std::cout << y[i]-cos(x0+i*h) << std::endl;
+		av += (y[i]-cos(x0+i*h))/(N+1);
 	}
+
+    std::cout << std::endl << av;
 
     //std::cout << y[0];
 
