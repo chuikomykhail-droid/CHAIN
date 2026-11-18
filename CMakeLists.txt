@@ -20,6 +20,7 @@ add_executable(chain
     DE2solver.cpp
     plot.cpp
     plotwindow.cpp
+    gridFunction.cpp
 )
 target_link_libraries(chain PRIVATE SDL3::SDL3-static)
 
