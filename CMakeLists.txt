@@ -19,6 +19,7 @@ add_executable(chain
     main.cpp
     DE2solver.cpp
     plot.cpp
+    plotwindow.cpp
 )
 target_link_libraries(chain PRIVATE SDL3::SDL3-static)
 

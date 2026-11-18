@@ -10,6 +10,9 @@
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\plot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\plotwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Flash\golova\cpp\chain\CHAIN\CMakeLists.txt" />

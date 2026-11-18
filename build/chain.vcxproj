@@ -371,6 +371,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\main.cpp" />
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\DE2solver.cpp" />
     <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\plot.cpp" />
+    <ClCompile Include="D:\Flash\golova\cpp\chain\CHAIN\plotwindow.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
