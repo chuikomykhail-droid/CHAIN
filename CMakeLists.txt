@@ -16,12 +16,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SDL3)
 
 add_executable(chain
-    main.cpp
-    DE2solver.cpp
-    plot.cpp
-    plotwindow.cpp
-    gridFunction.cpp
-    chain.cpp
+    src/main.cpp
+    src/DE2solver.cpp
+    src/plot.cpp
+    src/plotwindow.cpp
+    src/gridFunction.cpp
+    src/chain.cpp
 )
 target_link_libraries(chain PRIVATE SDL3::SDL3-static)
 
