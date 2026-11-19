@@ -1,8 +1,0 @@
-================================================================================
-Linker Errors
-Generated: 2026-11-18T16:12:55.525Z
-Total Errors: 1
-================================================================================
-
-[LNK1168] (MSVC)
-cannot open D:\Flash\golova\cpp\chain\CHAIN\build\Debug\chain.exe for writing [D:\Flash\golova\cpp\chain\CHAIN\build\chain.vcxproj]
