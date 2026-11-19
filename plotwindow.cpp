@@ -177,6 +177,10 @@ int PlotWindow::hitTest(const Viewport& vp, float px, float py) const
 // ---------------------------------------------------------------------------
 bool PlotWindow::processEvents()
 {
+    Uint64 now = SDL_GetTicksNS();
+    dt_ = lastTicksNS_ ? (now - lastTicksNS_) * 1e-9 : 0.0;
+    lastTicksNS_ = now;
+
     const Viewport vp = viewport();
     SDL_Event e;
     while (SDL_PollEvent(&e)) {

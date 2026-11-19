@@ -12,7 +12,7 @@ public:
     /*
     Next step by time
     */
-    void Integrate(const std::vector<double>& dXdt, const std::vector<double>& dXdt2);
+    void Integrate(const std::vector<double>& dXdt, const std::vector<double>& dXdt2, double dt);
 
     // Производная порядка order (1, 2 или 3) функции F на равномерной сетке с шагом h.
     // Второй порядок точности везде, включая края. Нужно F.size() >= order + 2.

@@ -34,6 +34,9 @@ public:
 
     // Обработать события (мышь, клавиатура). false — окно закрыли (крестик / Esc / Q).
     bool processEvents();
+    // Время в секундах между двумя последними вызовами processEvents() (длительность кадра).
+    // При vsync обычно ~1/60 с. На первом кадре — 0.
+    double dt() const { return dt_; }
     // Нарисовать кадр. Ждёт vsync, поэтому задаёт частоту цикла.
     void render();
 
@@ -74,4 +77,7 @@ private:
     int  dragged_ = -1;   // id точки, которую сейчас тащат
     int  hovered_ = -1;   // id точки под курсором
     bool changed_ = true;
+
+    unsigned long long lastTicksNS_ = 0;   // время прошлого processEvents(), нс
+    double dt_ = 0;
 };

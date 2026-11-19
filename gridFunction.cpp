@@ -14,11 +14,11 @@ GridFunction::GridFunction(const std::vector<double>& X, const std::vector<doubl
     CalculateDerivatives();
 }
 
-void GridFunction::Integrate(const std::vector<double>& dXdt, const std::vector<double>& dXdt2)
+void GridFunction::Integrate(const std::vector<double>& dXdt, const std::vector<double>& dXdt2, double dt)
 {
     for (int i=0; i<N+1; i++)
     {
-        X[i] += dXdt[i]*h + dXdt2[i]*h*h/2;
+        F[i] += dXdt[i]*dt + dXdt2[i]*dt*dt/2;
     }
 
     CalculateDerivatives();
