@@ -71,9 +71,12 @@ void Chain::Update(double dB[2], double dt)
 
     double vxN=dB[0]/dt;
     double vyN=dB[1]/dt;
-
+ 
     double axN = (vxN-vxN_old)/dt;
     double ayN = (vyN-vyN_old)/dt;
+
+    double p = 0;
+    double q=0;
 
     std::array<std::vector<double>, 4> Cfs;
     for (int i = 0; i<4; i++){
@@ -82,32 +85,25 @@ void Chain::Update(double dB[2], double dt)
 
     for (int i= 0; i<N+1; i++)
     {
-        Cfs[2][i]=X.D1[i]*X.D1[i] + Y.D1[i]*Y.D1[i];
-        Cfs[1][i]=2*Y.D1[i]*(Y.D2[i]-(Y.D1[i]*X.D2[i])/X.D1[i]);
-        Cfs[0][i]=Y.D1[i]*(Y.D3[i]-(2*Y.D2[i]*X.D2[i]+Y.D1[i]*X.D3[i])/X.D1[i] + 2*Y.D1[i]*X.D2[i]*X.D2[i]/(X.D1[i]*X.D1[i]) );
-        Cfs[3][i]=(M/Length)*X.D1[i]*(Xt.D1[i]*Xt.D1[i] + Yt.D1[i]*Yt.D1[i]);
+        Cfs[2][i]=pow(X.D1[i],2) + pow(Y.D1[i],2);
+        Cfs[1][i]=0;
+        Cfs[0][i]=-(pow(X.D2[i], 2) + pow(Y.D2[i], 2));
+        Cfs[3][i]=(M/Length)*((pow(Xt.D1[i],2) + pow(Yt.D1[i],2))+(q*q/2)*(pow(X.D1[i], 2) + pow(Y.D1[i],2)-1) + p*(X.D1[i]*Xt.D1[i]+Y.D1[i]*Yt.D1[i]));
     }
 
-    double *BC0 = new double[3]{0,1,0};
-    auto alpha = [&](int i) {
-        return Y.D2[i]*(1/X.D1[i]) - Y.D1[i]*pow(X.D1[i], -1)*X.D2[i];};
-    auto beta = [&](int i){
-        return Y.D1[i]*pow(X.D1[i], -1);};
-    double gamma = (M/Length)*(9.807+ayN);
+    double *BC0 = new double[3]{0,1,(M/Length)*(9.807)*Y.D1[0]};
+    double *BCN = new double[3]{0, 1, (M/Length)*(9.807*Y.D1[N]+axN*X.D1[N]+ayN*Y.D1[N])};
 
-
-    double *BCN = new double[3]{alpha(N), beta(N), gamma};
-
-    std::vector<double> H = solveDE2(N, h, BC0, BCN, Cfs);
-    std::vector<double> Hl = GridFunction::Derivative(H, h, 1);
+    std::vector<double> T = solveDE2(N, h, BC0, BCN, Cfs);
+    std::vector<double> Tl = GridFunction::Derivative(T, h, 1);
 
 
     std::vector<double> Xt2(N+1);
     std::vector<double> Yt2(N+1);
     for (int i =1; i < N; i++)
     {
-        Xt2[i]= Hl[i]*(Length/M);
-        Yt2[i]=(Length/M)*(Hl[i]*beta(i) + H[i]*alpha(i))-9.807;
+        Xt2[i]= (Length/M)*(T[i]*X.D2[i]+Tl[i]*X.D1[i]);
+        Yt2[i]=(Length/M)*(T[i]*Y.D2[i]+Tl[i]*Y.D1[i])-9.807;
     }
 
     Xt2[0]=0;
@@ -121,6 +117,66 @@ void Chain::Update(double dB[2], double dt)
     X.Integrate(Xt.F, zeros, dt);
     Yt.Integrate(Yt2, zeros, dt);
     Y.Integrate(Yt.F, zeros, dt);
-
-
 }
+
+
+//Old
+
+// void Chain::Update(double dB[2], double dt)
+// {
+//     double vxN_old=Xt.F[N];
+//     double vyN_old=Yt.F[N];
+
+//     double vxN=dB[0]/dt;
+//     double vyN=dB[1]/dt;
+
+//     double axN = (vxN-vxN_old)/dt;
+//     double ayN = (vyN-vyN_old)/dt;
+
+//     std::array<std::vector<double>, 4> Cfs;
+//     for (int i = 0; i<4; i++){
+//         Cfs[i].resize(N+1);
+//     }
+
+//     for (int i= 0; i<N+1; i++)
+//     {
+//         Cfs[2][i]=X.D1[i]*X.D1[i] + Y.D1[i]*Y.D1[i];
+//         Cfs[1][i]=2*Y.D1[i]*(Y.D2[i]-(Y.D1[i]*X.D2[i])/X.D1[i]);
+//         Cfs[0][i]=Y.D1[i]*(Y.D3[i]-(2*Y.D2[i]*X.D2[i]+Y.D1[i]*X.D3[i])/X.D1[i] + 2*Y.D1[i]*X.D2[i]*X.D2[i]/(X.D1[i]*X.D1[i]) );
+//         Cfs[3][i]=(M/Length)*X.D1[i]*(Xt.D1[i]*Xt.D1[i] + Yt.D1[i]*Yt.D1[i]);
+//     }
+
+//     double *BC0 = new double[3]{0,1,0};
+//     auto alpha = [&](int i) {
+//         return Y.D2[i]*(1/X.D1[i]) - Y.D1[i]*pow(X.D1[i], -1)*X.D2[i];};
+//     auto beta = [&](int i){
+//         return Y.D1[i]*pow(X.D1[i], -1);};
+//     double gamma = (M/Length)*(9.807+ayN);
+
+
+//     double *BCN = new double[3]{alpha(N), beta(N), gamma};
+
+//     std::vector<double> H = solveDE2(N, h, BC0, BCN, Cfs);
+//     std::vector<double> Hl = GridFunction::Derivative(H, h, 1);
+
+
+//     std::vector<double> Xt2(N+1);
+//     std::vector<double> Yt2(N+1);
+//     for (int i =1; i < N; i++)
+//     {
+//         Xt2[i]= Hl[i]*(Length/M);
+//         Yt2[i]=(Length/M)*(Hl[i]*beta(i) + H[i]*alpha(i))-9.807;
+//     }
+
+//     Xt2[0]=0;
+//     Yt2[0]=0;
+//     Xt2[N]=axN;
+//     Yt2[N]=ayN;
+
+//     std::vector<double> zeros(N+1, 0.0);
+
+//     Xt.Integrate(Xt2, zeros, dt);
+//     X.Integrate(Xt.F, zeros, dt);
+//     Yt.Integrate(Yt2, zeros, dt);
+//     Y.Integrate(Yt.F, zeros, dt);
+// }
