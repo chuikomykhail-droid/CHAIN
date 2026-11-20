@@ -85,7 +85,8 @@ void Chain::Update(double dB[2], double dt)
         std::cout << axN << std::endl; 
     }
 
-    double p = 200;
+    double gamma=-12;
+    double p = 200.;
     double q=100;
  
     std::array<std::vector<double>, 4> Cfs;
@@ -98,11 +99,11 @@ void Chain::Update(double dB[2], double dt)
         Cfs[2][i]=pow(X.D1[i],2) + pow(Y.D1[i],2);
         Cfs[1][i]=0;
         Cfs[0][i]=-(pow(X.D2[i], 2) + pow(Y.D2[i], 2));
-        Cfs[3][i]=(M/Length)*((pow(Xt.D1[i],2) + pow(Yt.D1[i],2))+(q*q/2)*(pow(X.D1[i], 2) + pow(Y.D1[i],2)-1) + p*(X.D1[i]*Xt.D1[i]+Y.D1[i]*Yt.D1[i]));
+        Cfs[3][i]=(M/Length)*((pow(Xt.D1[i],2) + pow(Yt.D1[i],2))+(q*q/2)*(pow(X.D1[i], 2) + pow(Y.D1[i],2)-1) + p*(X.D1[i]*Xt.D1[i]+Y.D1[i]*Yt.D1[i])) + (gamma/2)*(X.D1[i]*Xt.D1[i]+Y.D1[i]*Yt.D1[i]);
     }
 
     double *BC0 = new double[3]{0,1,(M/Length)*g*Y.D1[0]};
-    double *BCN = new double[3]{0, 1, (M/Length)*(g*Y.D1[N]+axN*X.D1[N]+ayN*Y.D1[N])};
+    double *BCN = new double[3]{0, 1, (M/Length)*(g*Y.D1[N]+axN*X.D1[N]+ayN*Y.D1[N])-gamma*(X.D1[N]*Xt.F[N]+Y.D1[N]*Yt.F[N])};
 
     std::vector<double> T = solveDE2(N, h, BC0, BCN, Cfs);
     std::vector<double> Tl = GridFunction::Derivative(T, h, 1);
@@ -121,8 +122,8 @@ void Chain::Update(double dB[2], double dt)
     std::vector<double> Yt2(N+1);
     for (int i =1; i < N; i++)
     {
-        Xt2[i]= (Length/M)*(T[i]*X.D2[i]+Tl[i]*X.D1[i]);
-        Yt2[i]=(Length/M)*(T[i]*Y.D2[i]+Tl[i]*Y.D1[i])-g;
+        Xt2[i]= (Length/M)*(T[i]*X.D2[i]+Tl[i]*X.D1[i] + gamma*Xt.F[i]);
+        Yt2[i]=(Length/M)*(T[i]*Y.D2[i]+Tl[i]*Y.D1[i]+gamma*Yt.F[i])-g;
     }
 
     Xt2[0]=0;

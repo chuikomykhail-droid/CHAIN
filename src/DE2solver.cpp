@@ -47,19 +47,39 @@ std::vector<double> solveDE2(int N, double h, double BC0[3], double BCN[3], cons
 {
 	std::vector<double> a(N+1), b(N+1), c(N+1), f(N+1);
 
-	b[0]=BC0[0]-BC0[1]/h;
-	c[0]=BC0[1]/h;
-	f[0]=BC0[2];
+	if (BC0[1] != 0)
+	{
+		double P = Cfs[2][0]/(h*h), Q = Cfs[1][0]/(2*h), s = 2*h/BC0[1];
+		b[0]=-2*P + (P-Q)*s*BC0[0] + Cfs[0][0];
+		c[0]=2*P;
+		f[0]=-Cfs[3][0] + (P-Q)*s*BC0[2];
+	}
+	else
+	{
+		b[0]=BC0[0];
+		c[0]=0;
+		f[0]=BC0[2];
+	}
 
-	a[N]=-BCN[1]/h;
-	b[N]=BCN[0]+BCN[1]/h;
-	f[N]=BCN[2];
+	if (BCN[1] != 0)
+	{
+		double P = Cfs[2][N]/(h*h), Q = Cfs[1][N]/(2*h), s = 2*h/BCN[1];
+		a[N]=2*P;
+		b[N]=-2*P - (P+Q)*s*BCN[0] + Cfs[0][N];
+		f[N]=-Cfs[3][N] - (P+Q)*s*BCN[2];
+	}
+	else
+	{
+		a[N]=0;
+		b[N]=BCN[0];
+		f[N]=BCN[2];
+	}
 
-	for (int i = 1; i < N; i++) 
+	for (int i = 1; i < N; i++)
     {
-        c[i] =  Cfs[1][i]/h + Cfs[2][i]/(h*h);
-        a[i] =  Cfs[2][i]/(h*h);
-        b[i] = -(Cfs[1][i]/h + 2*Cfs[2][i]/(h*h)) + Cfs[0][i];
+        c[i] =  Cfs[2][i]/(h*h) + Cfs[1][i]/(2*h);
+        a[i] =  Cfs[2][i]/(h*h) - Cfs[1][i]/(2*h);
+        b[i] = -2*Cfs[2][i]/(h*h) + Cfs[0][i];
 
         f[i]=-Cfs[3][i];
 	}

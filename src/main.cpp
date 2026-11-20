@@ -12,7 +12,7 @@ void chainDemo(int N, double Mass, double Length);
 
 int main() 
 {
-	constexpr int N = 75;
+	constexpr int N = 250;
 
     chainDemo(N, 1.0, 2.0);
 
@@ -22,7 +22,7 @@ int main()
 void chainDemo(int N, double Mass, double Length)
 {
     constexpr int subframes = 32;
-    constexpr double K=1; // sqrt(K)
+    constexpr double K=2; // sqrt(K)
 
     double A[2] = {0, 0};
     double B[2] = {1.2, 0.5};
@@ -48,8 +48,9 @@ void chainDemo(int N, double Mass, double Length)
     
             for (int i = 1; i<subframes+1; i++)
             {
-                v[0]=-K*(actualB0[0]-b.x)*sin(K*(i*dt/subframes))+v0[0]*cos(K*(i*dt/subframes));
-                v[1]=-K*(actualB0[1]-b.y)*sin(K*(i*dt/subframes))+v0[1]*cos(K*(i*dt/subframes));
+                double ddt=i*dt/subframes;
+                v[0]=exp(-K*ddt)*(v0[0]-K*(v0[0]+K*(actualB0[0]-b.x))*ddt);
+                v[1]=exp(-K*ddt)*(v0[1]-K*(v0[1]+K*(actualB0[1]-b.y))*ddt);
                 actualB[0] += v[0]*dt;
                 actualB[1] += v[1]*dt;
 
@@ -64,7 +65,7 @@ void chainDemo(int N, double Mass, double Length)
             actualB0[0]=actualB[0];
             actualB0[1]=actualB[1];
         }
-        
+
         win.setCurve(0, chain.X.F, chain.Y.F, 4.0f);
         win.render();
     }
