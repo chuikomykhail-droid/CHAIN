@@ -27,7 +27,7 @@ class PlotWindow {
 public:
     PlotWindow(const std::string& title,
                double xmin, double xmax, double ymin, double ymax,
-               int width = 1700, int height = 1300);
+               int width = 1000, int height = 600);
     ~PlotWindow();
     PlotWindow(const PlotWindow&) = delete;
     PlotWindow& operator=(const PlotWindow&) = delete;

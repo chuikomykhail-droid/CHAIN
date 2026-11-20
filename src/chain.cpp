@@ -3,6 +3,7 @@
 #include <cmath>
 #include <array>
 #include "DE2solver.h"
+#include <iostream>>
 
 namespace {
     constexpr double g = 9.807;   
@@ -79,9 +80,14 @@ void Chain::Update(double dB[2], double dt)
     double axN = (vxN-vxN_old)/dt;
     double ayN = (vyN-vyN_old)/dt;
 
-    double p = 0;
-    double q=0;
+    if (axN != 0)
+    {
+        std::cout << axN << std::endl; 
+    }
 
+    double p = 200;
+    double q=100;
+ 
     std::array<std::vector<double>, 4> Cfs;
     for (int i = 0; i<4; i++){
         Cfs[i].resize(N+1);
@@ -100,6 +106,15 @@ void Chain::Update(double dB[2], double dt)
 
     std::vector<double> T = solveDE2(N, h, BC0, BCN, Cfs);
     std::vector<double> Tl = GridFunction::Derivative(T, h, 1);
+    std::vector<double> Tll = GridFunction::Derivative(T, h, 2);
+
+    double s=0;
+    // for (int i=0; i<N+1; i++)
+    // {
+    //     s+=Cfs[2][i]*Tll[i]+Cfs[1][i]*Tl[i]+Cfs[0][i]*T[i]+Cfs[3][i];
+    // }
+    // std::cout << s/(N+1) << std::endl;
+
 
 
     std::vector<double> Xt2(N+1);
