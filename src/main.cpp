@@ -8,24 +8,24 @@
 #include <numbers>
 #include <vector>
 
-void chainDemo(int N);
+void chainDemo(int N, double Mass, double Length);
 
 int main() 
 {
-	constexpr int N = 50;
+	constexpr int N = 30;
 
-    chainDemo(N);
+    chainDemo(N, 1.0, 2.5);
 
 	return 0;
 }
 
-void chainDemo(int N)
+void chainDemo(int N, double Mass, double Length)
 {
-    double A[2] = {0, 0}, B[2] = {1, 1};
-    double Length = 2.0, M = 1.0;
-    Chain chain(Length, N, A, B, M);
+    double A[2] = {0, 0};
+    double B[2] = {1, 1};
+    Chain chain(Length, N, A, B, Mass);
 
-    PlotWindow win("chain: drag the orange point", -0.5, 2.5, -1.5, 1.5);
+    PlotWindow win("CHACHA", -0.5, 2.5, -1.5, 1.5);
     win.addPoint({A[0], A[1]});
     int Bp = win.addPoint({B[0], B[1]}, true);
     Point prevB = win.point(Bp);
@@ -39,7 +39,7 @@ void chainDemo(int N)
 
             chain.Update(dB, std::min(dt, 1.0/30));   
         }
-        win.setCurve(0, chain.X.F, chain.Y.F);
+        win.setCurve(0, chain.X.F, chain.Y.F, 4.0f);
         win.render();
     }
 }

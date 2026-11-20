@@ -27,7 +27,7 @@ class PlotWindow {
 public:
     PlotWindow(const std::string& title,
                double xmin, double xmax, double ymin, double ymax,
-               int width = 1000, int height = 650);
+               int width = 1700, int height = 1300);
     ~PlotWindow();
     PlotWindow(const PlotWindow&) = delete;
     PlotWindow& operator=(const PlotWindow&) = delete;
@@ -50,12 +50,14 @@ public:
     bool  pointsChanged();
 
     // Кривые. index — номер кривой (0, 1, ...), цвет зависит от номера.
-    void setCurve(int index, const std::vector<double>& X, const std::vector<double>& Y);
+    // width — толщина линии в пикселях.
+    void setCurve(int index, const std::vector<double>& X, const std::vector<double>& Y,
+                  float width = 2.0f);
     void clearCurves();
 
 private:
     struct Viewport;
-    struct Curve  { std::vector<double> X, Y; };
+    struct Curve  { std::vector<double> X, Y; float width = 2.0f; };
     struct Handle { Point p; bool draggable; };
 
     Viewport viewport() const;

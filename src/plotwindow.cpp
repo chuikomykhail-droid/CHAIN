@@ -74,6 +74,40 @@ void fillCircle(SDL_Renderer* r, float cx, float cy, float rad, Color c)
     SDL_RenderGeometry(r, nullptr, v, N + 1, idx, N * 3);
 }
 
+// Ломаная толщиной width пикселей: каждый отрезок — прямоугольник из двух треугольников,
+// в узлах — круги, чтобы стыки были скруглёнными и без щелей.
+void drawThickPolyline(SDL_Renderer* r, const SDL_FPoint* p, int n, float width, Color c)
+{
+    if (width <= 1.5f) {                       // тонкая линия — обычными средствами SDL
+        SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
+        SDL_RenderLines(r, p, n);
+        return;
+    }
+    const float hw = width / 2;
+    const SDL_FColor fc{c.r / 255.f, c.g / 255.f, c.b / 255.f, 1.f};
+
+    std::vector<SDL_Vertex> v;
+    std::vector<int> idx;
+    v.reserve((size_t)(n - 1) * 4);
+    idx.reserve((size_t)(n - 1) * 6);
+    for (int i = 0; i + 1 < n; ++i) {
+        float dx = p[i + 1].x - p[i].x, dy = p[i + 1].y - p[i].y;
+        float len = SDL_sqrtf(dx * dx + dy * dy);
+        if (len < 1e-6f) continue;
+        float nx = -dy / len * hw, ny = dx / len * hw;   // нормаль длиной hw
+        int b = (int)v.size();
+        v.push_back({{p[i].x + nx,     p[i].y + ny},     fc, {0, 0}});
+        v.push_back({{p[i].x - nx,     p[i].y - ny},     fc, {0, 0}});
+        v.push_back({{p[i + 1].x - nx, p[i + 1].y - ny}, fc, {0, 0}});
+        v.push_back({{p[i + 1].x + nx, p[i + 1].y + ny}, fc, {0, 0}});
+        idx.insert(idx.end(), {b, b + 1, b + 2, b, b + 2, b + 3});
+    }
+    if (!v.empty())
+        SDL_RenderGeometry(r, nullptr, v.data(), (int)v.size(), idx.data(), (int)idx.size());
+    if (width > 3)
+        for (int i = 0; i < n; ++i) fillCircle(r, p[i].x, p[i].y, hw, c);
+}
+
 } // namespace
 
 // ---------------------------------------------------------------------------
@@ -137,7 +171,8 @@ bool PlotWindow::pointsChanged()
     return c;
 }
 
-void PlotWindow::setCurve(int index, const std::vector<double>& X, const std::vector<double>& Y)
+void PlotWindow::setCurve(int index, const std::vector<double>& X, const std::vector<double>& Y,
+                          float width)
 {
     if (X.size() != Y.size())
         throw std::invalid_argument("PlotWindow::setCurve: X and Y sizes differ");
@@ -145,6 +180,7 @@ void PlotWindow::setCurve(int index, const std::vector<double>& X, const std::ve
     if ((size_t)index >= curves_.size()) curves_.resize(index + 1);
     curves_[index].X = X;
     curves_[index].Y = Y;
+    curves_[index].width = width;
 }
 
 void PlotWindow::clearCurves() { curves_.clear(); }
@@ -293,6 +329,7 @@ void PlotWindow::drawCurves(const Viewport& vp)
         const auto& X = curves_[k].X;
         const auto& Y = curves_[k].Y;
         const Color c = kPalette[k % std::size(kPalette)];
+        const float width = curves_[k].width;
         SDL_SetRenderDrawColor(renderer_, c.r, c.g, c.b, 255);
 
         std::vector<SDL_FPoint> pts(X.size());
@@ -304,11 +341,9 @@ void PlotWindow::drawCurves(const Viewport& vp)
             for (; i < X.size() && std::isfinite(X[i]) && std::isfinite(Y[i]); ++i)
                 pts[n++] = {vp.sx(X[i]), vp.sy(Y[i])};
             if (n >= 2) {
-                SDL_RenderLines(renderer_, pts.data(), (int)n);
-                for (size_t j = 0; j < n; ++j) pts[j].y += 1;   // толщина 2px
-                SDL_RenderLines(renderer_, pts.data(), (int)n);
+                drawThickPolyline(renderer_, pts.data(), (int)n, width, c);
             } else if (n == 1) {
-                SDL_RenderPoint(renderer_, pts[0].x, pts[0].y);
+                fillCircle(renderer_, pts[0].x, pts[0].y, std::max(width / 2, 1.f), c);
             }
             start = i + 1;
         }
