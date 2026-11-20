@@ -60,8 +60,8 @@ void Chain::CalculateCatenary(double Length, double A[2], double B[2])
         std::reverse(ys.begin(), ys.end());
     }
 
-    X = GridFunction(L, xs, N, 3);
-    Y = GridFunction(L, ys, N, 3);
+    X = GridFunction(L, xs, N, 2);
+    Y = GridFunction(L, ys, N, 2);
 }
 
 void Chain::Update(double dB[2], double dt)
